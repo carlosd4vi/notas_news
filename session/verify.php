@@ -18,7 +18,7 @@ if (empty($usuario) || empty($senha)) {
     die("Por favor, preencha usuário e senha.");
 }
 
-require_once 'postagem/conexao.php'; 
+require_once '../db/conexao.php'; 
 
 try {
     $sql = "SELECT id, usuario, senha FROM admin WHERE usuario = :usuario LIMIT 1";

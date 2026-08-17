@@ -130,7 +130,7 @@ $_SESSION['form_token'] = $token;
 <h3>Ultimas Publicações: </h3>
 <section class="noticias-secundarias">
 <?php
-require_once 'postagem/conexao.php';
+require_once '../db/conexao.php';
 
 $noticias = [];
 $sql = "SELECT id, titulo, descricao, link1, link2, data FROM dados_noticia ORDER BY data DESC LIMIT 6";
