@@ -121,7 +121,7 @@ $_SESSION['form_token'] = $token;
   <br>
 <div class="container-form">
   <div class="formulario-box">
-    <form action="../envio.php" method="post" class="meu-formulario">
+    <form action="envio.php" method="post" class="meu-formulario">
       <div class="form-group">
         <label for="titulo">Título:</label>
         <input type="text" placeholder="digite o titulo..." id="titulo" name="tl" required>
@@ -152,7 +152,7 @@ $_SESSION['form_token'] = $token;
 <h3>Ultimas Publicações: </h3>
 <section class="noticias-secundarias">
 <?php
-require_once 'postagem/conexao.php';
+require_once '../db/conexao.php';
 
 $noticias = [];
 $sql = "SELECT id, titulo, descricao, link1, link2, data FROM dados_noticia ORDER BY data DESC LIMIT 6";
