@@ -162,13 +162,13 @@ $pdo = null;
                 ?>
 
                 <div class="acoes-report">
-                    <form action="denuncia_envio.php" method="post">
+                    <form action="../report/denuncia_envio.php" method="post">
                         <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
                         <input type="hidden" name="id" value="<?= htmlspecialchars($report['id']) ?>">
                         <input type="hidden" name="tabela" value="report">
                         <button type="submit" class="btn btn-verde">Manter Post</button>
                     </form>
-                    <form action="denuncia_envio.php" method="post">
+                    <form action="../report/denuncia_envio.php" method="post">
                         <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
                         <input type="hidden" name="id" value="<?= htmlspecialchars($id_noticia) ?>">
                         <input type="hidden" name="tabela" value="dados">
@@ -178,7 +178,6 @@ $pdo = null;
 
             <?php else: ?>
                 <div style="text-align: center; padding: 30px 0;">
-                    <h3 style="color: #28a745;">Tudo limpo! ✅</h3>
                     <p>Nenhuma denúncia pendente de análise.</p>
                 </div>
             <?php endif; ?>
