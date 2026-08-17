@@ -1,44 +1,5 @@
-<style>
-        .container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 400px;
-            padding: 20px;
-            border-radius: 8px;
-            background-color: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        textarea {
-            width: 100%;
-            height: 150px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-            resize: none; /* Impede o redimensionamento da textarea pelo usuário */
-        }
-
-        button {
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<p>
 <?php
 session_start();
-
 
 if (empty($_SESSION['logado'])) {
     header("Location: login.php");
@@ -59,16 +20,15 @@ if (empty($titulo) || empty($descricao) || empty($fonte1)) {
     die("Por favor, preencha todos os campos obrigatórios (Título, Descrição e Fonte 1).");
 }
 
-require_once 'postagem/conexao.php';
+require_once '../db/conexao.php';
 
-$sql = "INSERT INTO dados (titulo, descricao, link, link_2) VALUES (?, ?, ?, ?)";
+$sql = "INSERT INTO dados_noticia (titulo, descricao, link1, link2) VALUES (?, ?, ?, ?)";
 
 try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$titulo, $descricao, $fonte1, $fonte2]);
+    
     $id_noticia = $pdo->lastInsertId();
-
-    echo "<p style='color: green; text-align: center;'>Enviado com sucesso!</p>";
 
 } catch (PDOException $e) {
     die("Erro ao inserir os dados: " . $e->getMessage());
@@ -76,32 +36,94 @@ try {
 
 $pdo = null;
 
-$url_base = "noticia.php?token=";
-$texto_compartilhar = $descricao . " - Leia mais em: " . $url_base . $id_noticia;
+$url_noticia = "noticia.php?token=" . urlencode($id_noticia);
 ?>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Postagem Enviada</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
 
-<div class="container" style="text-align: center; margin-top: 30px;">
-    <label for="texto">Texto gerado para compartilhamento:</label><br><br>
-    
-    <textarea id="texto" rows="5" cols="60" style="padding: 10px;"><?= htmlspecialchars($texto_compartilhar) ?></textarea><br><br>
-    
-    <button onclick="copyText()" style="padding: 10px 20px; cursor: pointer;">Copiar Texto</button>
-</div>
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+            padding: 30px 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
 
-<script>
-    function copyText() {
-        const textarea = document.getElementById('texto');
+        .icone-sucesso {
+            font-size: 50px;
+            margin-bottom: -10px;
+        }
+
+        h2 {
+            color: #28a745;
+            margin: 0;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-primario {
+            background-color: #007bff;
+        }
+
+        .btn-primario:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secundario {
+            background-color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .btn-secundario:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="icone-sucesso">✅</div>
+        <h2>Enviado com Sucesso!</h2>
         
-        textarea.select();
-        textarea.setSelectionRange(0, 99999);
-        
-        navigator.clipboard.writeText(textarea.value)
-            .then(() => {
-                alert("Texto copiado para a área de transferência!");
-            })
-            .catch(err => {
-                console.error("Erro ao copiar o texto:", err);
-                alert("Ocorreu um erro ao copiar o texto.");
-            });
-    }
-</script>
+        <p>A sua notícia foi publicada e já está disponível para leitura.</p>
+
+        <a href="painel.php" class="btn btn-secundario">
+            Voltar ao Painel
+        </a>
+    </div>
+
+</body>
+</html>
