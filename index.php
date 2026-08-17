@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notas News</title>
+    <title>Nota News</title>
     <link rel="icon" href="img/logo.jpeg" type="image/jpeg">
     <link rel="stylesheet" href="css/estilo.css">
 </head>
@@ -27,9 +27,8 @@
     <main class="container">
         <section class="noticia-principal">
             <article class="card-noticia destaque">
-                <img src="https://via.placeholder.com/600x400" alt="Imagem da notícia principal">
-                <h2>Checadores de Fatos Indepentes.</h2>
-                <p>Como verificamos as noticias?, o que é considerado fato ou fake?, quais fontes são confiaveis?</p>
+                <h2>Nota News</h2>
+                <p>Pequenas notas de noticias, seja tecnologia, financeiro, empresarial, entretenimento.</p>
                 <a href="#">Saiba Mais</a>
             </article>
         </section>
