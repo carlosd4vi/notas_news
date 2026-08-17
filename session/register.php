@@ -1,65 +1,124 @@
 <?php
 session_start();
 
-// Verifica se o usuário está logado
-if (!isset($_SESSION['logado']) || $_SESSION['logado'] !== true) {
-    // Se não estiver logado, redireciona para a página de login
-    header("location: login.php");}
-
-if (!isset($_POST['token']) || !isset($_SESSION['form_token'])) {
-    die('Erro Token Invalido');
+if (empty($_SESSION['logado']) || $_SESSION['logado'] !== true) {
+    header("Location: login.php");
+    exit;
 }
 
-// Verifica se os tokens são iguais
-if ($_POST['token'] !== $_SESSION['form_token']) {
-    die('Tentativa de reenvio do formulário. Ação não permitida.');
+if (empty($_POST['token']) || empty($_SESSION['form_token']) || !hash_equals($_SESSION['form_token'], $_POST['token'])) {
+    die('Token inválido ou expirado. Volte e tente novamente.');
+}
+unset($_SESSION['form_token']); 
+
+$username = trim($_POST['usuario'] ?? '');
+$password = trim($_POST['senha'] ?? '');
+
+
+if (empty($username) || empty($password)) {
+    die("Erro: Por favor, preencha o nome de usuário e a senha.");
 }
 
-// OBRIGATÓRIO: Destruir o token para evitar que o usuário reenvie o formulário novamente
-unset($_SESSION['form_token']);
+require_once '../db/conexao.php';
 
-// Se chegou aqui, os dados são válidos. Prossiga com o processamento.
-// ...
-$host = 'localhost'; // Ou o IP do seu servidor de banco de dados
-$dbname = 'bank_dados';
-$usuario = 'root'; // Ou seu usuário
-$senha = ''; // Ou sua senha
-$charset = 'utf8';
+$senha_hash = password_hash($_POST['senha'], PASSWORD_DEFAULT);
+
+$sql = "INSERT INTO admin (usuario, senha) VALUES (?, ?)";
 
 try {
-    // String de conexão
-    $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
-    $pdo = new PDO($dsn, $usuario, $senha);
-
-    // Configura o PDO para lançar exceções em caso de erro.
-    // Isso facilita a depuração e o tratamento de erros.
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
-    echo "Enviado com sucesso e conexão bem sucedida!";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$username, $senha_hash]);
 
 } catch (PDOException $e) {
-    // Em caso de erro, exibe uma mensagem amigável e encerra o script.
-    die("Erro na conexão com o banco de dados: " . $e->getMessage());
-}
-$username = $_POST['usuario'];
-$password = $_POST['senha'];
-
-$senha_hash = password_hash($password, PASSWORD_DEFAULT);
-
-
-$sql = "INSERT INTO usuario (usuario,senha) VALUES (?, ?)";
-
-
-    try {
-        // 3. Prepara a consulta para execução
-        $stmt = $pdo->prepare($sql);
-
-        // 4. Executa a consulta, passando os valores em um array
-        // A ordem dos valores no array deve ser a mesma dos placeholders
-        $stmt->execute([$username, $senha_hash]);
-
-    } catch (PDOException $e) {
-        die("Erro ao inserir os dados: " . $e->getMessage());
+    if ($e->getCode() == 23000) {
+        die("<div style='text-align:center; margin-top:50px; font-family:Arial;'>
+                <h2 style='color:red;'>Erro: Esse nome de usuário já existe!</h2>
+                <a href='painel.php'>Voltar</a>
+             </div>");
     }
+    
+    die("Erro ao inserir os dados: " . $e->getMessage());
+}
+
+$pdo = null;
 ?>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuário Cadastrado</title>
+    
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+            padding: 30px 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .icone-sucesso {
+            font-size: 50px;
+            margin-bottom: -10px;
+        }
+
+        h2 {
+            color: #28a745;
+            margin: 0;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.5;
+            font-size: 16px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="icone-sucesso">✅</div>
+        <h2>Cadastro feito com sucesso!</h2>
+        
+        <p>O usuário <strong><?= htmlspecialchars($username) ?></strong> foi adicionado ao sistema e já pode fazer login.</p>
+        
+        <a href="painel.php" class="btn">Voltar ao Painel</a>
+    </div>
+
+</body>
+</html>

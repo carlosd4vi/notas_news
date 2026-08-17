@@ -1,3 +1,13 @@
+    <?php
+session_start();
+
+if (!isset($_SESSION['logado']) || $_SESSION['logado'] !== true) {
+    header("location: login.php");}
+?>
+<?php
+$token = bin2hex(random_bytes(32));
+$_SESSION['form_token'] = $token;
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -14,77 +24,74 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Use min-height para permitir que a página role se o conteúdo for maior */
-  background-color: #f4f4f4; /* Cor de fundo suave */
-  font-family: Arial, sans-serif; /* Fonte padrão */
+  min-height: 100vh;
+  background-color: #f4f4f4;
+  font-family: Arial, sans-serif;
 }
 
 .formulario-box {
-  background-color: #ffffff; /* Fundo branco para o box do formulário */
+  background-color: #ffffff;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Sombra mais pronunciada */
-  width: 100%; /* Ocupa toda a largura disponível */
-  max-width: 400px; /* Largura máxima para o formulário */
-  box-sizing: border-box; /* Garante que padding não aumente a largura total */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;/
+  box-sizing: border-box;
 }
 
-/* Estilos para o formulário */
 .meu-formulario {
-  display: flex; /* Transforma o formulário em um flex container */
-  flex-direction: column; /* Organiza os itens em coluna (um abaixo do outro) */
-  gap: 15px; /* Espaçamento entre os grupos de formulário */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .form-group {
   display: flex;
-  flex-direction: column; /* Coloca label e input em coluna */
+  flex-direction: column;
 }
 
 .form-group label {
-  margin-bottom: 5px; /* Espaçamento entre o label e o input */
-  font-weight: bold; /* Deixa o label em negrito */
+  margin-bottom: 5px;
+  font-weight: bold;
   color: #333;
 }
 
-/* Estilos para os inputs de texto */
 .meu-formulario input {
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1em;
-  width: 100%; /* Ocupa 100% da largura do seu contêiner pai */
-  box-sizing: border-box; /* Inclui padding e borda na largura total */
-  transition: border-color 0.3s ease; /* Transição suave na borda */
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
 .meu-formulario input:focus {
-  border-color: #007bff; /* Borda azul ao focar */
-  outline: none; /* Remove o outline padrão do navegador */
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Sombra suave ao focar */
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
-/* Estilos para o botão */
 .meu-formulario button {
-  background-color: #007bff; /* Cor de fundo azul */
-  color: white; /* Texto branco */
+  background-color: #007bff;
+  color: white;
   padding: 12px 20px;
   border: none;
   border-radius: 5px;
   font-size: 1.1em;
-  cursor: pointer; /* Muda o cursor para indicar que é clicável */
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Transição suave */
-  margin-top: 10px; /* Espaçamento acima do botão */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 10px;
 }
 
 .meu-formulario button:hover {
-  background-color: #0056b3; /* Cor de fundo mais escura ao passar o mouse */
-  transform: translateY(-2px); /* Efeito de "levantar" ao passar o mouse */
+  background-color: #0056b3;
+  transform: translateY(-2px);
 }
 
 .meu-formulario button:active {
-  background-color: #004085; /* Cor ainda mais escura ao clicar */
-  transform: translateY(0); /* Volta à posição normal ao clicar */
+  background-color: #004085;
+  transform: translateY(0);
 }
     </style>
     </style>
@@ -105,16 +112,6 @@
             <li><a href="denuncia.php">Denuncia</a></li>
         </ul>
 </nav>
-    <?php
-session_start();
-
-if (!isset($_SESSION['logado']) || $_SESSION['logado'] !== true) {
-    header("location: login.php");}
-?>
-<?php
-$token = bin2hex(random_bytes(32));
-$_SESSION['form_token'] = $token;
-?>
 <center>
 <h1>Painel de cadastro:</h1>
   <br>
@@ -123,9 +120,9 @@ $_SESSION['form_token'] = $token;
     <form action="register.php" method="post" class="meu-formulario">
       <div class="form-group">
         <label for="titulo">Usuário:</label>
-        <input type="text" placeholder="Usuario de cadastro..." id="user" name="usuario" required>
-        <label for="titulo">Senha:</label>
-        <input type="password" placeholder="Usuario de cadastro..." id="user" name="senha" required>
+        <input type="text" placeholder="Usuario de cadastro..." name="usuario" required autocomplete="off">
+        <label for="senha">Senha:</label>
+        <input type="password" placeholder="Senha de cadastro..." name="senha" required>
         <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>" required>
       </div>
       <button type="submit">Cadastrar</button>
