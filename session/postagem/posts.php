@@ -123,7 +123,7 @@ $pdo = null;
     
     <nav class="menu-navegacao">
         <ul>
-            <li><a href="../index.php">Início</a></li>
+            <li><a href="../../index.php">Início</a></li>
             <li><a href="../painel.php">Painel</a></li>
             <li><a href="../cadastro.php">Cadastro</a></li>
             <li><a href="../denuncia.php">Denuncia</a></li>
@@ -156,8 +156,6 @@ $pdo = null;
                             <label>Data:</label>
                             <span><?= htmlspecialchars($post['data']) ?></span>
                         </div>
-                        <textarea style="display:none;" id="texto"><?= htmlspecialchars($post['descricao']) ?>&#10;noticia.php?token=<?= htmlspecialchars($post['id']) ?></textarea>
-                        <button type="button" class="btn btn-verde" onclick="copyText()">Copiar Texto para Divulgação</button>
                         <div class="botoes-acao">
                             <a href="preparo.php?preparo=editar&id=<?php echo $post['id']; ?>" class="btn btn-azul">Editar</a>
                             <a href="preparo.php?preparo=excluir&id=<?= urlencode($post['id']) ?>" class="btn btn-vermelho" onclick="return confirm('Tem certeza que deseja excluir esta notícia?');">Excluir</a>
@@ -176,19 +174,5 @@ $pdo = null;
     <footer class="rodape">
         <p>&copy; <?= date('Y') ?> Portal de Notícias. Todos os direitos reservados.</p>
     </footer>
-
-    <script>
-        function copyText() {
-            const textarea = document.getElementById('texto');
-            navigator.clipboard.writeText(textarea.value)
-                .then(() => {
-                    alert("Texto copiado para a área de transferência com sucesso!");
-                })
-                .catch(err => {
-                    console.error("Erro ao copiar o texto:", err);
-                    alert("Ocorreu um erro ao copiar o texto.");
-                });
-        }
-    </script>
 </body>
 </html>
