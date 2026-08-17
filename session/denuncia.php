@@ -24,24 +24,20 @@
         </ul>
 </nav>
     <?php
-// 1. Inicia a sessão e checa o login com segurança extrema
 session_start();
 if (empty($_SESSION['logado']) || $_SESSION['logado'] !== true) {
     header("Location: login.php");
-    exit; // OBRIGATÓRIO para impedir que invasores leiam o resto da página
+    exit; 
 }
 
-// 2. Geração do Token de segurança (CSRF) para os botões de ação
 if (empty($_SESSION['form_token'])) {
     $_SESSION['form_token'] = bin2hex(random_bytes(32));
 }
 $token = $_SESSION['form_token'];
 
-// 3. Conexão PDO (Segura e padronizada)
-require_once '../db/conexao.php'; // Ajuste o caminho se necessário
+require_once '../db/conexao.php';
 
-// Como conversamos antes, os nomes corretos no seu banco são post, fonte, texto e motivo
-$sql = "SELECT id, texto, post, fonte, motivo, data FROM report ORDER BY id DESC LIMIT 1";
+$sql = "SELECT id, texto, post, fonte, motivo, data FROM report ORDER BY data DESC LIMIT 1";
 $report = null;
 
 try {
@@ -53,11 +49,10 @@ try {
     error_log("Erro na consulta de report: " . $e->getMessage());
 }
 
-$pdo = null; // Fecha a conexão
+$pdo = null;
 ?>
     
     <style>
-        /* Estilos base (reaproveitados do seu padrão) */
         body {
             background-color: #f4f4f4;
             font-family: Arial, sans-serif;
@@ -83,7 +78,6 @@ $pdo = null; // Fecha a conexão
             box-sizing: border-box;
         }
 
-        /* Estilo dos dados do report */
         .info-report {
             display: flex;
             flex-direction: column;
@@ -94,7 +88,7 @@ $pdo = null; // Fecha a conexão
         .info-report label {
             font-weight: bold;
             color: #333;
-            margin-bottom: -10px; /* Aproxima a label do texto */
+            margin-bottom: -10px;
         }
         
         .info-report p, .info-report a {
@@ -103,10 +97,9 @@ $pdo = null; // Fecha a conexão
             background-color: #f8f9fa;
             border-radius: 5px;
             border: 1px solid #ddd;
-            word-wrap: break-word; /* Impede que links gigantes quebrem a tela */
+            word-wrap: break-word;
         }
 
-        /* Botões de Ação */
         .acoes-report {
             display: flex;
             gap: 10px;
@@ -114,7 +107,7 @@ $pdo = null; // Fecha a conexão
         }
         
         .acoes-report form {
-            flex: 1; /* Faz os dois botões terem o mesmo tamanho */
+            flex: 1;
         }
 
         .btn {
@@ -169,15 +162,12 @@ $pdo = null; // Fecha a conexão
                 ?>
 
                 <div class="acoes-report">
-                    <!-- Form 1: Manter (Ignorar Denúncia) -->
                     <form action="denuncia_envio.php" method="post">
                         <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
                         <input type="hidden" name="id" value="<?= htmlspecialchars($report['id']) ?>">
                         <input type="hidden" name="tabela" value="report">
                         <button type="submit" class="btn btn-verde">Manter Post</button>
                     </form>
-
-                    <!-- Form 2: Excluir Publicação -->
                     <form action="denuncia_envio.php" method="post">
                         <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
                         <input type="hidden" name="id" value="<?= htmlspecialchars($id_noticia) ?>">
