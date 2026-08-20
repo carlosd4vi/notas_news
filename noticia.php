@@ -34,10 +34,11 @@ $pdo = null;
         <div class="logo">
             <img src="img/logo.jpeg" alt="logo da página" class="img-logo">
         </div>
-        <div class="pesquisa">
-            <input type="text" placeholder="Pesquisar..." onclick="javascript:alert('Indisponível');">
-            <button>Buscar</button>
-        </div>
+        <form class="pesquisa" action="index.php" method="GET">
+            <input type="text" name="busca" placeholder="Pesquisar..." required>
+            <button type="submit">Buscar</button>
+        </form>
+        
     </header>
 
     <nav class="menu-navegacao">
@@ -61,9 +62,7 @@ $pdo = null;
                     <?php if (!empty($dados['link2'])): ?>
                         <a href="<?= htmlspecialchars($dados['link2']) ?>" id="link2" target="_blank"><?= htmlspecialchars($dados['link2']) ?></a>
                         <br>
-                    <?php endif; ?>
-                    
-                    <a href="report.php" style="color:red; display:inline-block; margin-top:15px;">Reportar</a>
+                    <?php endif; ?>                    <a href="report.php?token=<?= htmlspecialchars($dados['id']) ?>" style="color:red; display:inline-block; margin-top:15px;">Reportar</a>
                 </article>
             </section>
             
