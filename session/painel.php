@@ -117,7 +117,7 @@ $token = bin2hex(random_bytes(32));
 $_SESSION['form_token'] = $token;
 ?>
 <center>
-<h1>Olá, <?php echo $_SESSION['usuario']; ?></h1>
+<h1>Olá, <?php echo $_SESSION['admin_usuario']; ?></h1>
   <br>
 <div class="container-form">
   <div class="formulario-box">
