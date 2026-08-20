@@ -1,19 +1,23 @@
+<?php
+session_start();
+$token = bin2hex(random_bytes(32));
+$_SESSION['form_token'] = $token;
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notas News</title>
+    <title>Notas News - Login</title>
     <link rel="icon" href="../img/logo.jpeg" type="image/jpeg">
     <link rel="stylesheet" href="../css/estilo.css">
     <style>
-        /* CORREÇÃO DO ESPAÇAMENTO AQUI */
         .container-form {
           display: flex;
           justify-content: center;
           align-items: center;
-          padding: 40px 20px; /* Substituímos o 100vh por um padding agradável */
+          padding: 40px 20px; 
           margin-bottom: 20px;
           background-color: #f4f4f4; 
           font-family: Arial, sans-serif; 
@@ -90,10 +94,11 @@
         <div class="logo">
             <img src="../img/logo.jpeg" alt="logo da página" class="img-logo">
         </div>
-        <div class="pesquisa">
-            <input placeholder="Pesquisar..." onclick="javascript:alert('indisponivel');">
-            <button>Buscar</button>
-        </div>
+        <form class="pesquisa" action="../index.php" method="GET" style="display: flex; gap: 5px;">
+            <input type="text" name="busca" placeholder="Pesquisar..." required>
+            <button type="submit">Buscar</button>
+        </form>
+        
     </header>
     <nav class="menu-navegacao">
         <ul>
@@ -101,11 +106,6 @@
         </ul>
     </nav>
     <center>
-        <?php
-        session_start();
-        $token = bin2hex(random_bytes(32));
-        $_SESSION['form_token'] = $token;
-        ?>
         <br>
         <div class="container-form">
           <div class="formulario-box">
@@ -132,7 +132,7 @@
         </div>
     </center>
     
-    <h3>Ultimas Publicações: </h3>
+    <h3>Últimas Publicações: </h3>
     <section class="noticias-secundarias">
         <?php
         require_once '../db/conexao.php';
@@ -165,7 +165,7 @@
                 </article>
             <?php endforeach; ?>
         <?php else: ?>
-            <p>Nenhuma notícia encontrada.</p>
+            <p style="text-align: center; width: 100%;">Nenhuma notícia encontrada.</p>
         <?php endif; ?>
 
     </section>
